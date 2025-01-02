@@ -36,6 +36,7 @@ import com.example.touch.ui.theme.TouchTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.imageResource
@@ -94,21 +95,31 @@ fun Greeting(name: String) {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DrawCircle() {
-    var X by remember { mutableStateOf(0f) }
-    var Y by remember { mutableStateOf(0f) }
-    val handImage = ImageBitmap.imageResource(R.drawable.hand)
+    var X = remember { mutableStateListOf(0f) }
+    var Y = remember { mutableStateListOf(0f) }
+    var Fingers by remember {  mutableStateOf (0)  }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .pointerInteropFilter { event ->
-                X = event.getX(0)
-                Y = event.getY(0)
+                Fingers = event.getPointerCount()
+                X.clear()
+                Y.clear()
+                for (i in 0..Fingers - 1) {
+                    X.add( event.getX(i))
+                    Y.add (event.getY(i))
+                }
+
                 true
             }
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             //drawCircle(Color.Yellow, 100f, Offset(X, Y))
-            drawImage(handImage, Offset(X-handImage.width/2,Y-handImage.height/2))
+            for (i in 0..Fingers - 1) {
+                drawCircle(Color.Yellow, 100f, Offset(X[i], Y[i]))
+            }
+
         }
     }
 }
