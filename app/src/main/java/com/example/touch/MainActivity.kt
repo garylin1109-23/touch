@@ -1,6 +1,7 @@
 package com.example.touch
 
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
                     Column(modifier = Modifier.padding(innerPadding)){
                     Greeting(name = "Android")
                         DrawCircle()
+                        DrawPath()
                 }
             }
         }
@@ -141,15 +143,41 @@ fun DrawCircle() {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DrawPath() {
+    val paths = remember { mutableStateListOf<Points>() }
     Box(
         modifier = Modifier.fillMaxSize()
+            .pointerInteropFilter { event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        paths.clear()
+                        true
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        paths += Points(event.x, event.y)
+                        true
+                    }
+                    else -> false
+                }
+            }
     ) {
         Canvas(modifier = Modifier) {
             val p = Path()
-            p.moveTo(500f, 300f)
-            p.lineTo(300f, 600f)
+            //p.moveTo(500f, 300f)
+            //p.lineTo(300f, 600f)
+            var j = 0
+            for (path in paths) {
+                if (j==0){  //第一筆不畫
+                    p.moveTo(path.x, path.y)
+                }
+                else{
+                    p.lineTo(path.x, path.y)
+                }
+                j++
+            }
+
             drawPath(
                 p, color = Color.Black,
                 style = Stroke(width = 30f, join = StrokeJoin.Round)
@@ -157,6 +185,13 @@ fun DrawPath() {
         }
     }
 }
+
+data class Points(
+    val x: Float,
+    val y: Float
+)
+
+
 
 
 
