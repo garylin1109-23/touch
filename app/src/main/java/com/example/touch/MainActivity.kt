@@ -99,6 +99,20 @@ fun DrawCircle() {
     var Y = remember { mutableStateListOf(0f) }
     var Fingers by remember {  mutableStateOf (0)  }
 
+    val ColorRed = Color(0xFFFF0000)
+    val ColorOrange = Color(0xFFFFA500)
+    val ColorYellow = Color(0xFFFFFF00)
+    val ColorGreen = Color(0xFF008000)
+    val ColorBlue = Color(0xFF0000FF)
+    val ColorIndigo = Color(0xFF4B0082)
+    val ColorPurple = Color(0xFF800080)
+
+    var PaintColor:Color
+    var colors = arrayListOf(
+        ColorRed, ColorOrange, ColorYellow, ColorGreen,
+        ColorBlue, ColorIndigo, ColorPurple
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -117,9 +131,9 @@ fun DrawCircle() {
         Canvas(modifier = Modifier.fillMaxSize()) {
             //drawCircle(Color.Yellow, 100f, Offset(X, Y))
             for (i in 0..Fingers - 1) {
-                drawCircle(Color.Yellow, 100f, Offset(X[i], Y[i]))
+                PaintColor = colors[i % 7]
+                drawCircle(PaintColor, 100f, Offset(X[i], Y[i]))
             }
-
         }
     }
 }
