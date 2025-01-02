@@ -39,6 +39,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.imageResource
 
 class MainActivity : ComponentActivity() {
@@ -137,6 +140,25 @@ fun DrawCircle() {
         }
     }
 }
+
+@Composable
+fun DrawPath() {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Canvas(modifier = Modifier) {
+            val p = Path()
+            p.moveTo(500f, 300f)
+            p.lineTo(300f, 600f)
+            drawPath(
+                p, color = Color.Black,
+                style = Stroke(width = 30f, join = StrokeJoin.Round)
+            )
+        }
+    }
+}
+
+
 
 
 
